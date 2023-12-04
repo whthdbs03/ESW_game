@@ -47,9 +47,13 @@ while True:
 
     # 일정한 간격으로 스크롤을 표시하기 위해 지연 시간 설정
     #time.sleep(0.1)  # 원하는 딜레이 설정
-        
+ 
 
+
+        
+# 게임 클리어 했다.
 if result == 1:
+    time.sleep(2)
     # 이미지 크기 설정
     image_width, image_height = 240, 240
     background_color = (0, 0, 0, 100)  # 배경색을 검정색으로 설정하거나 필요한 색상으로 변경

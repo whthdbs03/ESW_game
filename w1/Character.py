@@ -5,7 +5,7 @@ class Character:
         self.appearance = 'circle'
         self.state = None
         self.position = np.array([width/2 - 20, height/2 - 20, width/2 + 20, height/2 + 20])
-        self.outline = "#FFFFFF"
+        self.outline = "#00FF00"
 
     def move(self, command = None):
         if command == None:

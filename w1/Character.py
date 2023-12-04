@@ -1,8 +1,12 @@
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
+import time
+import random, os
+from colorsys import hsv_to_rgb
 
 class Character:
     def __init__(self, width, height):
-        self.appearance = 'circle'
+        self.appearance = Image.open('image/돌(1).png')
         self.state = None
         self.position = np.array([width/2 - 20, height/2 - 20, width/2 + 20, height/2 + 20])
         self.outline = "#00FF00"
@@ -16,15 +20,15 @@ class Character:
             self.state = 'move'
             self.outline = "#FF0000" #빨강색상 코드!
 
-            if command == 'up_pressed':
-                self.position[1] -= 5
-                self.position[3] -= 5
+            # if command == 'up_pressed':
+            #     self.position[1] -= 5
+            #     self.position[3] -= 5
 
-            elif command == 'down_pressed':
-                self.position[1] += 5
-                self.position[3] += 5
+            # elif command == 'down_pressed':
+            #     self.position[1] += 5
+            #     self.position[3] += 5
 
-            elif command == 'left_pressed':
+            if command == 'left_pressed':
                 self.position[0] -= 5
                 self.position[2] -= 5
                 

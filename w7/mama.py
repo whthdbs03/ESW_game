@@ -1,3 +1,4 @@
+import http
 from PIL import Image, ImageDraw, ImageFont
 import time
 import random, os
@@ -41,7 +42,41 @@ joystick.disp.image(image)
 time.sleep(2)
  # 게임 시작 출력 완----------------------------------------------------------------------   
 
+def H(cnt):
+    # 이미지 크기 설정
+    image_width, image_height = 240, 240
+    background_color = (0, 0, 0, 100)  # 배경색을 검정색으로 설정하거나 필요한 색상으로 변경
 
+    # 새 이미지 생성
+    image = Image.new("RGBA", (image_width, image_height), background_color)
+    draw = ImageDraw.Draw(image)
+
+    # 텍스트 설정
+    text = "your heart: "+str(5-cnt)
+    text_color = (255, 0, 0)  # 텍스트 색상을 흰색으로 설정하거나 필요한 색상으로 변경
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)  # 폰트와 크기 설정
+
+    # 텍스트 크기 계산
+    #text_width, text_height = draw.textsize(text, font=font)
+    # 텍스트 크기 계산
+    text_bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = text_bbox[2] - text_bbox[0]
+    text_height = text_bbox[3] - text_bbox[1]
+
+    # 텍스트를 이미지 중앙에 배치하기 위한 위치 계산
+    text_x = (image_width - text_width) // 2
+    text_y = (image_height - text_height) // 2
+
+    # 텍스트를 이미지에 그리기
+    draw.text((text_x, text_y), text, fill=text_color, font=font)
+
+    # 현재 화면 이미지와 합성
+    composed_image = Image.alpha_composite(cropped_image.convert("RGBA"), image)
+
+    # 이미지를 화면에 표시
+    joystick.disp.image(composed_image)
+    time.sleep(2)
+# --------------------------------------------------------------------
 
 my_stone = Character(joystick.width, joystick.height)
 
@@ -69,19 +104,29 @@ for i, position in enumerate(rectangle_positions):
     obstacle_y = position[1] - 40  # 흰 사각형 윗면보다 위에 장애물 배치
     obstacle_positions.append((obstacle_x, obstacle_y))
 
-# 돌이 장애물과 부딪힌 횟수를 추적하는 변수
-# collisions = [0] * len(obstacle_positions)
+def check_collision(obstacle_x, obstacle_y):
+    # 돌의 꼭짓점 좌표 가져오기
+    stone_points = [
+        (my_stone.position[0], my_stone.position[1]),  # 좌상단
+        (my_stone.position[0] + 28, my_stone.position[1]),  # 우상단
+        (my_stone.position[0], my_stone.position[1] + 50),  # 좌하단
+        (my_stone.position[0] + 28, my_stone.position[1] + 50),  # 우하단
+    ]
 
-# # 돌과 장애물이 충돌하는지 확인하는 함수
-# def check_collision(stone, obstacles):
-#     for i, obstacle in enumerate(obstacles):
-#         # 장애물과 돌이 충돌하는 조건: 돌의 오른쪽이 장애물의 왼쪽을 넘어가지 않고, 돌의 왼쪽이 장애물의 오른쪽을 넘어가지 않으면 충돌
-#         if (stone.position[0] < obstacle[0] + 20 and stone.position[2] > obstacle[0] and
-#                 stone.position[1] < obstacle[1] + 20 and stone.position[3] > obstacle[1]):
-#             collisions[i] += 1
-#             return True
-#     return False
+    # 장애물의 좌측 상단, 우측 하단 꼭짓점 좌표 계산
+    obstacle_points = [
+        (obstacle_x, obstacle_y),
+        (obstacle_x + obstacle_image.width, obstacle_y + obstacle_image.height)
+    ]
 
+    # 충돌 감지
+    for point in stone_points:
+        if obstacle_points[0][0] <= point[0] <= obstacle_points[1][0] and \
+           obstacle_points[0][1] <= point[1] <= obstacle_points[1][1]:
+            return True  # 충돌 발생
+
+    return False  # 충돌 없음
+cnt = 0
 # 이미지의 높이 가져오기
 image_height = back.height  # 이미지의 높이를 가져옵니다.
 
@@ -91,23 +136,16 @@ mask = my_stone.appearances[my_stone.image_index].split()[3]
 result = 0
 while True:
     command = None
-    
-    hit_obstacle = False
-    for i, poposition in enumerate(obstacle_positions):
-        if poposition[1] - current_position <= my_stone.position[1] + 29 <= poposition[1] + 40 - current_position:
-            if my_stone.position[0] <= poposition[0]+15 or my_stone.position[2] >= poposition[0]:
-                hit_obstacle = True
-    if not hit_obstacle:
-        if not joystick.button_L.value:  # left pressed
-            command = 'left_pressed'
-        elif not joystick.button_R.value:  # right pressed
-            command = 'right_pressed'
-        # elif not joystick.button_A.value: # A pressed
-        #     command = 'attack'
-        else:
-            command = None
+    if not joystick.button_L.value:  # left pressed
+        command = 'left_pressed'
+    elif not joystick.button_R.value:  # right pressed
+        command = 'right_pressed'
+    # elif not joystick.button_A.value: # A pressed
+    #     command = 'attack'
+    else:
+        command = None
 
-        my_stone.move(command)
+    my_stone.move(command)
 
     # 이미지가 끝까지 스크롤되면 스크롤 중지
     if current_position > image_height - joystick.height:  # > 2400 - 240
@@ -129,17 +167,6 @@ while True:
         result = 1
         break    
         
-    # collision_detected = check_collision(my_stone, obstacle_positions)
-    # if collision_detected:
-    #     # 충돌한 장애물의 인덱스 찾기
-    #     if 1 in collisions:
-    #         collided_obstacle_index = collisions.index(1)
-    #         # 충돌 횟수가 2회 이상이면 장애물 삭제
-    #         if collisions[collided_obstacle_index] >= 2:
-    #             del obstacle_positions[collided_obstacle_index]
-    #             del collisions[collided_obstacle_index]
-
-            
     # 이미지를 이동시킬 위치 계산
     current_position += scroll_speed
 
@@ -150,12 +177,8 @@ while True:
             if not (holes[i] <= my_stone.position[0] <= holes[i] + 28):
                 hit_white_rectangle = True
                 break
-    # 장애물들을 순회하면서 걍 흰색 T/F 변수 같이 쓰기
-    for i, poposition in enumerate(obstacle_positions):
-        if poposition[1] - current_position <= my_stone.position[1] + 29 <= poposition[1] + 40 - current_position:
-            if my_stone.position[0] <= poposition[0]+15 or my_stone.position[2] >= poposition[0]:
-                hit_white_rectangle = True
-                break
+
+    
     # 흰색 사각형에 닿지 않으면 아래로 이동
     if not hit_white_rectangle: 
         my_stone.position[1] += 10  # 아래로 이동
@@ -165,7 +188,7 @@ while True:
         my_stone.position[3] -= scroll_speed  # 아래로 이동 못 함
 
     
-
+    
     # 이미지 조각내기 및 화면에 표시
     cropped_image = back.crop((0, current_position, joystick.width, joystick.height + current_position))
     display_image = cropped_image.copy()  # 배경 이미지 복사
@@ -205,12 +228,28 @@ while True:
             fill="white"
         )
 
+    # 게임 루프 내부에 충돌 검사 추가
+    for obstacle_pos in obstacle_positions:
+        obstacle_x, obstacle_y = obstacle_pos  # 장애물 위치 추출
+        obstacle_y -= current_position  # 스크롤에 맞게 y 좌표 조정
+        display_image.paste(obstacle_image, (obstacle_x, obstacle_y))
+
+        # 장애물과 돌 충돌 검사
+        if check_collision(obstacle_x, obstacle_y):
+            cnt += 1  # 충돌 횟수 증가
+            if cnt >= 5:
+                result = 0
+                break
+            H(cnt)
+            my_stone.position[0] += 20
+            my_stone.position[2] += 20
+            
     
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)
 
 
- 
+
 # 게임 실패 했다. --------------------------------------------------------------------------
 if result == 0:
     time.sleep(2)

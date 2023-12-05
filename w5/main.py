@@ -80,11 +80,20 @@ while True:
 
     my_stone.move(command)
 
+    if my_stone.position[1] + 29 > joystick.height / 2:  # 돌이 디스플레이 중앙보다 아래에 위치하면
+        scroll_speed = 10  # 배경의 스크롤 속도를 5로 변경
+        if my_stone.position[1] > joystick.height / 2:  # 돌이 디스플레이의 중앙보다 더 아래에 있으면
+            my_stone.position[1] -= 10  # 돌을 천천히 이동
+            my_stone.position[3] -= 10  # 돌을 위로 조금 이동
+    else:
+        scroll_speed = 1  # 그 외에는 기본 스크롤 속도인 1로 유지
+
+        
     # 이미지를 이동시킬 위치 계산
     current_position += scroll_speed
 
     # 이미지가 끝까지 스크롤되면 멈추기
-    if current_position > image_height - joystick.height:  # 이미지가 끝까지 스크롤되면 멈추기
+    if current_position > image_height - joystick.height:  # > 2400 - 240
         result =1
         break
     
@@ -98,8 +107,8 @@ while True:
 
     # 흰색 사각형에 닿지 않으면 아래로 이동
     if not hit_white_rectangle:
-        my_stone.position[1] += 5  # 아래로 이동
-        my_stone.position[3] += 5  # 아래로 이동
+        my_stone.position[1] += 10  # 아래로 이동
+        my_stone.position[3] += 10  # 아래로 이동
     if hit_white_rectangle:
         my_stone.position[1] -= scroll_speed  # 아래로 이동 못 함
         my_stone.position[3] -= scroll_speed  # 아래로 이동 못 함

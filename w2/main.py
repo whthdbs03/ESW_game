@@ -3,18 +3,18 @@ import time
 import random, os
 from colorsys import hsv_to_rgb
 
-from Character import Character
+from Character import Character  # Character 클래스를 불러와야 합니다.
 from Joystick import Joystick
 
-
-#왼 위 오 아래
+# 왼 위 오 아래
 joystick = Joystick()
-my_stone = Character(joystick.width, joystick.height)
-
 
 # 이미지 파일 경로
-image_path = 'image/background.png' 
+image_path = 'image/background.png'
 back = Image.open(image_path)
+
+my_stone = Character(joystick.width, joystick.height)
+
 
 # 이미지 크기
 image_width, image_height = back.size
@@ -24,6 +24,7 @@ screen_width, screen_height = 240, 240
 scroll_speed = 50
 current_position = 0
 
+result = 0
 while True:
     command = None
     if not joystick.button_L.value:  # left pressed
@@ -34,24 +35,27 @@ while True:
         command = None
 
     my_stone.move(command)
-    
+
     # 이미지를 이동시킬 위치 계산
     current_position += scroll_speed
 
-    # 이미지가 끝까지 스크롤되면 처음으로 돌아가도록 설정 -> 멈추기
-    if current_position > image_height - screen_height:
+    # 이미지가 끝까지 스크롤되면 멈추기
+    if current_position > image_height - joystick.height:  # 이미지가 끝까지 스크롤되면 멈추기
         result = 1
         break
 
     # 이미지 조각내기 및 화면에 표시
-    cropped_image = back.crop((0, current_position, screen_width, screen_height + current_position))
+    cropped_image = back.crop((0, current_position, joystick.width, joystick.height + current_position))
+    display_image = cropped_image.copy()  # 배경 이미지 복사
+    my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
 
-    # Character 이미지 합성
-    '''cropped_with_character = cropped_image.copy()
-    cropped_with_character.paste(my_stone.appearance, tuple(my_stone.position))
+    # 이미지 위에 원 그리기
+    my_draw.ellipse(tuple(my_stone.position), outline=my_stone.outline, fill=(0, 0, 0))
 
-    joystick.disp.image(cropped_with_character)'''
-    joystick.disp.image(cropped_image)
+    # 디스플레이에 이미지 표시
+    joystick.disp.image(display_image)
+
+
 
 
 

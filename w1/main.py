@@ -11,6 +11,7 @@ from Joystick import Joystick
 joystick = Joystick()
 my_stone = Character(joystick.width, joystick.height)
 
+
 # 이미지 파일 경로
 image_path = 'image/background.png' 
 back = Image.open(image_path)
@@ -33,7 +34,7 @@ while True:
         command = None
 
     my_stone.move(command)
-
+    
     # 이미지를 이동시킬 위치 계산
     current_position += scroll_speed
 
@@ -44,59 +45,15 @@ while True:
 
     # 이미지 조각내기 및 화면에 표시
     cropped_image = back.crop((0, current_position, screen_width, screen_height + current_position))
+
+    # Character 이미지 합성
+    '''cropped_with_character = cropped_image.copy()
+    cropped_with_character.paste(my_stone.appearance, tuple(my_stone.position))
+
+    joystick.disp.image(cropped_with_character)'''
     joystick.disp.image(cropped_image)
 
-"""#왼 위 오 아래
 
-joystick = Joystick()
-
-my_stone = Character(joystick.width, joystick.height)
-while True:
-    command = None
-    if not joystick.button_L.value:  # left pressed
-        command = 'left_pressed'
-
-    elif not joystick.button_R.value:  # right pressed
-        command = 'right_pressed'
-            
-    else:
-        command = None
-
-    my_stone.move(command)
-
-
-
-# 이미지 파일 경로
-image_path = 'image/background.png' 
-back = Image.open(image_path)
-
-# 이미지 크기
-image_width, image_height = back.size
-screen_width, screen_height = 240, 240
-
-# 초기 상태 설정
-scroll_speed = 50
-current_position = 0
-
-# 조각내고 초기 화면 표시
-cropped_image = back.crop((0, current_position, screen_width, screen_height + current_position))
-joystick.disp.image(cropped_image)
-
-    
-result = 0
-while True:
-# 이미지를 이동시킬 위치 계산
-    current_position += scroll_speed
-
-    # 이미지가 끝까지 스크롤되면 처음으로 돌아가도록 설정 -> 멈추기
-    if current_position > image_height - screen_height:
-        #current_position = 0
-        result = 1
-        break
-
-    # 이미지 조각내기 및 화면에 표시
-    cropped_image = back.crop((0, current_position, screen_width, screen_height + current_position))
-    joystick.disp.image(cropped_image)"""
 
 
  

@@ -113,7 +113,7 @@ while True:
         result = 1
         break 
     # 흰색 사각형에 닿지 않으면 아래로 이동
-    elif not hit_white_rectangle: 
+    if not hit_white_rectangle: 
         my_stone.position[1] += 10  # 아래로 이동
         my_stone.position[3] += 10  # 아래로 이동
     if hit_white_rectangle:

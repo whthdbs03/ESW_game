@@ -139,9 +139,11 @@ while True:
     display_image = cropped_image.copy()  # 배경 이미지 복사
     my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
 
+    #초기 위치 맨왼쪽위...
+    box=(-100,-100)
     # 이미지 위에 캐릭터 그리기
     #display_image.paste(my_stone.appearance, tuple(my_stone.position))
-    display_image.paste(my_stone.appearance, (0,0),mask)
+    display_image.paste(my_stone.appearance, box, mask)
 
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)

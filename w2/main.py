@@ -132,6 +132,7 @@ while True:
 
     # 이미지가 끝까지 스크롤되면 멈추기
     if current_position > image_height - joystick.height:  # 이미지가 끝까지 스크롤되면 멈추기
+        result = 1
         break
 
     # 이미지 조각내기 및 화면에 표시
@@ -143,15 +144,10 @@ while True:
     box=(-100,-100)
     # 이미지 위에 캐릭터 그리기
     #display_image.paste(my_stone.appearance, tuple(my_stone.position))
-    display_image.paste(my_stone.appearance, box, mask)
+    display_image.paste(my_stone.appearance, tuple(my_stone.position), mask)
 
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)
-    #joystick.disp.image(cropped_image)
-    # composed_image = Image.alpha_composite(cropped_image.convert("RGBA"), image)
-
-    # # 이미지를 화면에 표시
-    # joystick.disp.image(composed_image)
 
 
 

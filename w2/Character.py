@@ -9,7 +9,8 @@ class Character:
         self.appearance = Image.open('image/돌(1).png') #.crop((100,100,200,200))
         self.state = None
         #self.position = np.array([width/2 - 20, height/2 - 20, width/2 + 20, height/2 + 20])
-        self.position = [int(width/2 - 20), int(height/2 - 20), int(width/2 + 20), int(height/2 + 20)]
+        #self.position = [int(width/2 - 20), int(height/2 - 20), int(width/2 + 20), int(height/2 + 20)]
+        self.position = [-100,-100] #초기위치
         self.outline = "#00FF00"
 
     def move(self, command = None):
@@ -31,8 +32,8 @@ class Character:
 
             if command == 'left_pressed':
                 self.position[0] -= 5
-                self.position[2] -= 5
+                #self.position[2] -= 5
                 
             elif command == 'right_pressed':
                 self.position[0] += 5
-                self.position[2] += 5
+                #self.position[2] += 5

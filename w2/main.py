@@ -66,6 +66,38 @@ from Joystick import Joystick
 # 왼 위 오 아래
 joystick = Joystick()
 
+# 이미지 크기 설정
+image_width, image_height = 240, 240
+background_color = (0, 0, 0, 0)  # 배경색을 검정색으로 설정하거나 필요한 색상으로 변경
+
+    # 새 이미지 생성
+image = Image.new("RGBA", (image_width, image_height), background_color)
+draw = ImageDraw.Draw(image)
+
+# 텍스트 설정
+text = "GAME START!!"
+text_color = (255, 255, 255)  # 텍스트 색상을 흰색으로 설정하거나 필요한 색상으로 변경
+font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)  # 폰트와 크기 설정
+
+# 텍스트 크기 계산
+text_bbox = draw.textbbox((0, 0), text, font=font)
+text_width = text_bbox[2] - text_bbox[0]
+text_height = text_bbox[3] - text_bbox[1]
+
+# 텍스트를 이미지 중앙에 배치하기 위한 위치 계산
+text_x = (image_width - text_width) // 2
+text_y = (image_height - text_height) // 2
+
+# 텍스트를 이미지에 그리기
+draw.text((text_x, text_y), text, fill=text_color, font=font)
+
+# 이미지를 화면에 표시
+joystick.disp.image(image)
+    
+time.sleep(2)
+    
+
+
 my_stone = Character(joystick.width, joystick.height)
 
 # 이미지 파일 경로
@@ -102,14 +134,15 @@ while True:
 
     # 이미지 조각내기 및 화면에 표시
     cropped_image = back.crop((0, current_position, joystick.width, joystick.height + current_position))
-    display_image = cropped_image.copy()  # 배경 이미지 복사
-    my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
+    # display_image = cropped_image.copy()  # 배경 이미지 복사
+    # my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
 
-    # 이미지 위에 캐릭터 그리기
-    display_image.paste(my_stone.appearance, tuple(my_stone.position))
+    # # 이미지 위에 캐릭터 그리기
+    # display_image.paste(my_stone.appearance, tuple(my_stone.position))
 
-    # 디스플레이에 이미지 표시
-    joystick.disp.image(display_image)
+    # # 디스플레이에 이미지 표시
+    # joystick.disp.image(display_image)
+    joystick.disp.image(cropped_image)
 
 
 

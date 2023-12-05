@@ -237,14 +237,16 @@ while True:
         if check_collision(obstacle_x, obstacle_y):
             cnt += 1  # 충돌 횟수 증가
             if cnt >= 5:
-                result = 0
+                result = 3
                 break
             H(cnt)
             print(cnt)
             my_stone.position[0] += 20
             my_stone.position[2] += 20
             
-    
+    if result == 3:
+        result = 0
+        break
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)
 

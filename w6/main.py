@@ -95,7 +95,10 @@ while True:
     if my_stone.position[1] < 0:
         result = 0
         break
-            
+    # 돌이 집 도착하면 성공
+    if my_stone.position[1] + 60 > joystick.height:
+        result = 1
+        break    
         
     # 이미지를 이동시킬 위치 계산
     current_position += scroll_speed
@@ -108,10 +111,7 @@ while True:
                 hit_white_rectangle = True
                 break
 
-    # 돌이 집 도착하면 성공
-    if my_stone.position[3]-30 >= joystick.height:
-        result = 1
-        break 
+    
     # 흰색 사각형에 닿지 않으면 아래로 이동
     if not hit_white_rectangle: 
         my_stone.position[1] += 10  # 아래로 이동

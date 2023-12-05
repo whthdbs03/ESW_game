@@ -113,6 +113,8 @@ image_height = back.height  # 이미지의 높이를 가져옵니다.
 
 # 캐릭터 이미지의 크기 조정
 my_stone.appearance = my_stone.appearance.resize((joystick.width, joystick.height))
+mask = my_stone.appearance.split()[3]
+
 result = 0
 while True:
     command = None
@@ -134,15 +136,20 @@ while True:
 
     # 이미지 조각내기 및 화면에 표시
     cropped_image = back.crop((0, current_position, joystick.width, joystick.height + current_position))
-    # display_image = cropped_image.copy()  # 배경 이미지 복사
-    # my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
+    display_image = cropped_image.copy()  # 배경 이미지 복사
+    my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
 
-    # # 이미지 위에 캐릭터 그리기
-    # display_image.paste(my_stone.appearance, tuple(my_stone.position))
+    # 이미지 위에 캐릭터 그리기
+    #display_image.paste(my_stone.appearance, tuple(my_stone.position))
+    display_image.paste(my_stone.appearance, (0,0),mask)
 
-    # # 디스플레이에 이미지 표시
-    # joystick.disp.image(display_image)
-    joystick.disp.image(cropped_image)
+    # 디스플레이에 이미지 표시
+    joystick.disp.image(display_image)
+    #joystick.disp.image(cropped_image)
+    # composed_image = Image.alpha_composite(cropped_image.convert("RGBA"), image)
+
+    # # 이미지를 화면에 표시
+    # joystick.disp.image(composed_image)
 
 
 

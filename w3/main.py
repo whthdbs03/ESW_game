@@ -57,8 +57,9 @@ current_position = 0
 image_height = back.height  # 이미지의 높이를 가져옵니다.
 
 # 캐릭터 이미지의 크기 조정
-my_stone.appearance = my_stone.appearance.resize((joystick.width, joystick.height))
-mask = my_stone.appearance.split()[3]
+#my_stone.appearance = my_stone.appearance.resize((joystick.width, joystick.height))
+my_stone.appearances[my_stone.image_index] = my_stone.appearances[my_stone.image_index].resize((joystick.width, joystick.height))
+mask = my_stone.appearances[my_stone.image_index].split()[3]
 
 result = 0
 while True:
@@ -91,7 +92,7 @@ while True:
     box=(-100,-100)
     # 이미지 위에 캐릭터 그리기
     #display_image.paste(my_stone.appearance, tuple(my_stone.position))
-    display_image.paste(my_stone.appearance, tuple(my_stone.position), mask)
+    display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position), mask)
 
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)

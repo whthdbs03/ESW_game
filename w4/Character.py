@@ -37,12 +37,12 @@ class Character:
                 self.position[0] -= 5
                 self.image_index = (self.image_index - 1) % 4  # 3-2-1-0 순으로 반복
                 self.appearance = self.appearances[self.image_index]
-                #self.position[2] -= 5
+                self.position[2] -= 5
                 
             elif command == 'right_pressed':
                 self.position[0] += 5
                 self.image_index = (self.image_index + 1) % 4  # 0-1-2-3 순으로 반복
-                #self.position[2] += 5
+                self.position[2] += 5
                 self.appearance = self.appearances[self.image_index]
             #elif command == 'A_pressed':
                 #

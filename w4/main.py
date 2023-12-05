@@ -50,14 +50,13 @@ image_path = 'image/background.png'
 back = Image.open(image_path)
 
 # 초기 상태 설정
-scroll_speed = 5
+scroll_speed = 1
 current_position = 0
 
 # 사각형들의 초기 위치
 rectangle_positions = [(0, 100+100 * i) for i in range(23)]  # 100 간격으로 23개의 사각형이 배치됩니다.
 
 # 각 사각형의 뚫린 부분을 나타내는 리스트 생성
-#holes = [random.randint(0, 240) for _ in range(len(rectangle_positions))]
 holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 가로 길이가 60이므로 180으로 변경합니다.
 
 # 이미지의 높이 가져오기
@@ -88,6 +87,25 @@ while True:
     if current_position > image_height - joystick.height:  # 이미지가 끝까지 스크롤되면 멈추기
         result =1
         break
+    
+    # 사각형들을 순회하면서 흰색 사각형에 닿았는지 확인
+    hit_white_rectangle = False
+    for i, position in enumerate(rectangle_positions):
+        if position[1] - current_position <= my_stone.position[1] + 29 <= position[1] + 12 - current_position:
+            if not (holes[i] <= my_stone.position[0] <= holes[i] + 28):
+                hit_white_rectangle = True
+                break
+
+
+    # 흰색 사각형에 닿지 않으면 아래로 이동
+    if not hit_white_rectangle:
+        my_stone.position[1] += 5  # 아래로 이동
+        my_stone.position[3] += 5  # 아래로 이동
+    if hit_white_rectangle:
+        my_stone.position[1] -= scroll_speed  # 아래로 이동 못 함
+        my_stone.position[3] -= scroll_speed  # 아래로 이동 못 함
+
+
 
     # 이미지 조각내기 및 화면에 표시
     cropped_image = back.crop((0, current_position, joystick.width, joystick.height + current_position))
@@ -95,7 +113,6 @@ while True:
     my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
 
     # 이미지 위에 캐릭터 그리기
-    #display_image.paste(my_stone.appearance, tuple(my_stone.position))
     display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position),mask)
 
     # 사각형들 그리기

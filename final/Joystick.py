@@ -21,27 +21,11 @@ class Joystick:
                     )
 
         # Input pins:
-        self.button_A = DigitalInOut(board.D5)
-        self.button_A.direction = Direction.INPUT
-
-        #얘는 나중에 일시중지버튼?
-        # self.button_B = DigitalInOut(board.D6)
-        # self.button_B.direction = Direction.INPUT
-
         self.button_L = DigitalInOut(board.D27)
         self.button_L.direction = Direction.INPUT
 
         self.button_R = DigitalInOut(board.D23)
         self.button_R.direction = Direction.INPUT
-
-        # self.button_U = DigitalInOut(board.D17)
-        # self.button_U.direction = Direction.INPUT
-
-        # self.button_D = DigitalInOut(board.D22)
-        # self.button_D.direction = Direction.INPUT
-
-        # self.button_C = DigitalInOut(board.D4)
-        # self.button_C.direction = Direction.INPUT
 
         # Turn on the Backlight
         self.backlight = DigitalInOut(board.D26)

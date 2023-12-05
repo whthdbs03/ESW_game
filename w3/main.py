@@ -50,14 +50,20 @@ image_path = 'image/background.png'
 back = Image.open(image_path)
 
 # 초기 상태 설정
-scroll_speed = 50
+scroll_speed = 5
 current_position = 0
+
+# 사각형들의 초기 위치
+rectangle_positions = [(0, 100+100 * i) for i in range(23)]  # 100 간격으로 23개의 사각형이 배치됩니다.
+
+# 각 사각형의 뚫린 부분을 나타내는 리스트 생성
+#holes = [random.randint(0, 240) for _ in range(len(rectangle_positions))]
+holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 가로 길이가 60이므로 180으로 변경합니다.
 
 # 이미지의 높이 가져오기
 image_height = back.height  # 이미지의 높이를 가져옵니다.
 
 # 캐릭터 이미지의 크기 조정
-#my_stone.appearance = my_stone.appearance.resize((joystick.width, joystick.height))
 my_stone.appearances[my_stone.image_index] = my_stone.appearances[my_stone.image_index].resize((joystick.width, joystick.height))
 mask = my_stone.appearances[my_stone.image_index].split()[3]
 
@@ -68,8 +74,8 @@ while True:
         command = 'left_pressed'
     elif not joystick.button_R.value:  # right pressed
         command = 'right_pressed'
-    elif not joystick.button_A.value: # A pressed
-        command = 'A_pressed'
+    # elif not joystick.button_A.value: # A pressed
+    #     command = 'A_pressed'
     else:
         command = None
 
@@ -80,7 +86,7 @@ while True:
 
     # 이미지가 끝까지 스크롤되면 멈추기
     if current_position > image_height - joystick.height:  # 이미지가 끝까지 스크롤되면 멈추기
-        result = 1
+        result =1
         break
 
     # 이미지 조각내기 및 화면에 표시
@@ -94,9 +100,24 @@ while True:
     #display_image.paste(my_stone.appearance, tuple(my_stone.position))
     display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position), mask)
 
+    # 사각형들 그리기
+    for i, position in enumerate(rectangle_positions):
+        rect_position = (position[0], position[1] - current_position)  # 스크롤에 맞게 위치 조정
+        hole_start = holes[i]
+        hole_end = hole_start + 60  # 뚫린 부분은 가로 60
+
+        my_draw.rectangle(
+            [(rect_position[0], rect_position[1]), (hole_start, rect_position[1] + 12)],  # 왼쪽 뚫린 부분
+            fill="white"
+        )
+        my_draw.rectangle(
+            [(hole_end, rect_position[1]), (rect_position[0] + 240, rect_position[1] + 12)],  # 오른쪽 뚫린 부분
+            fill="white"
+        )
+
+    
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)
-
 
 
 

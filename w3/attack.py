@@ -19,24 +19,12 @@ class attack:
         self.state = None
         self.outline = "#0000FF"
         
-        if command['up_pressed']:
-            self.direction['up'] = True
-        if command['down_pressed']:
-            self.direction['down'] = True
         if command['right_pressed']:
             self.direction['right'] = True
         if command['left_pressed']:
             self.direction['left'] = True
 
     def move(self):
-        if self.direction['up']:
-            self.position[1] -= self.speed
-            self.position[3] -= self.speed
-
-        if self.direction['down']:
-            self.position[1] += self.speed
-            self.position[3] += self.speed
-
         if self.direction['left']:
             self.position[0] -= self.speed
             self.position[2] -= self.speed

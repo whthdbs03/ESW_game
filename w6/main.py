@@ -53,19 +53,26 @@ back = Image.open(image_path)
 scroll_speed = 1
 current_position = 0
 
+obstacle_positions = []  # 장애물의 위치를 저장할 리스트
+
 # 사각형들의 초기 위치
 rectangle_positions = [(0, 100+100 * i) for i in range(23)]  # 100 간격으로 23개의 사각형이 배치됩니다.
 
 # 각 사각형의 뚫린 부분을 나타내는 리스트 생성
 holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 가로 길이가 60이므로 180으로 변경합니다.
 
+# 장애물의 위치 설정
+for position in rectangle_positions:
+    obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
+    obstacle_y = position[1] - 40  # 흰 사각형 윗면보다 위에 장애물 배치
+    obstacle_positions.append((obstacle_x, obstacle_y))
+
 # 이미지의 높이 가져오기
 image_height = back.height  # 이미지의 높이를 가져옵니다.
 
 # 캐릭터 이미지의 크기 조정
-#my_stone.appearances[my_stone.image_index] = my_stone.appearances[my_stone.image_index].resize((joystick.width, joystick.height))
 mask = my_stone.appearances[my_stone.image_index].split()[3]
-
+    
 result = 0
 while True:
     command = None
@@ -74,7 +81,7 @@ while True:
     elif not joystick.button_R.value:  # right pressed
         command = 'right_pressed'
     # elif not joystick.button_A.value: # A pressed
-    #     command = 'A_pressed'
+    #     command = 'attack'
     else:
         command = None
 
@@ -129,6 +136,22 @@ while True:
 
     # 이미지 위에 캐릭터 그리기
     display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position),mask)
+
+
+
+
+    # 추가된 코드 부분: 장애물 이미지
+    obstacle_image = Image.open('image/obstacle.png')
+
+    # 이미지 위에 장애물 그리기
+    for obstacle_pos in obstacle_positions:
+        obstacle_x, obstacle_y = obstacle_pos  # 장애물 위치 추출
+        obstacle_y -= current_position  # 스크롤에 맞게 y 좌표 조정
+        display_image.paste(obstacle_image, (obstacle_x, obstacle_y))
+
+
+
+
 
     # 사각형들 그리기
     for i, position in enumerate(rectangle_positions):

@@ -15,7 +15,7 @@ class attack:
         self.position = np.array([position[0]-3, position[1]-3, position[0]+3, position[1]+3])
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
 
-        self.direction = {'up' : False, 'down' : False, 'left' : False, 'right' : False}
+        self.direction = {'left' : False, 'right' : False}
         self.state = None
         self.outline = "#0000FF"
         

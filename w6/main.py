@@ -62,10 +62,14 @@ rectangle_positions = [(0, 100+100 * i) for i in range(23)]  # 100 간격으로 
 holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 가로 길이가 60이므로 180으로 변경합니다.
 
 # 장애물의 위치 설정
-for position in rectangle_positions:
+for i, position in enumerate(rectangle_positions):
     obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
+    while holes[i] <= obstacle_x <= holes[i] + 60: # 홀 피해서
+        obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
     obstacle_y = position[1] - 40  # 흰 사각형 윗면보다 위에 장애물 배치
     obstacle_positions.append((obstacle_x, obstacle_y))
+
+
 
 # 이미지의 높이 가져오기
 image_height = back.height  # 이미지의 높이를 가져옵니다.
@@ -103,7 +107,7 @@ while True:
         result = 0
         break
     # 돌이 집 도착하면 성공
-    if my_stone.position[1] + 60 > joystick.height:
+    if my_stone.position[1] + 50 > joystick.height:
         result = 1
         break    
         
@@ -148,8 +152,8 @@ while True:
         obstacle_x, obstacle_y = obstacle_pos  # 장애물 위치 추출
         obstacle_y -= current_position  # 스크롤에 맞게 y 좌표 조정
         display_image.paste(obstacle_image, (obstacle_x, obstacle_y))
-
-
+        
+    
 
 
 

@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw, ImageFont
+'''from PIL import Image, ImageDraw, ImageFont
 import time
 import random, os
 from colorsys import hsv_to_rgb
@@ -51,6 +51,62 @@ while True:
 
     # 이미지 위에 원 그리기
     my_draw.ellipse(tuple(my_stone.position), outline=my_stone.outline, fill=(0, 0, 0))
+
+    # 디스플레이에 이미지 표시
+    joystick.disp.image(display_image)'''
+
+from PIL import Image, ImageDraw, ImageFont
+import time
+import random, os
+from colorsys import hsv_to_rgb
+
+from Character import Character  # Character 클래스를 불러와야 합니다.
+from Joystick import Joystick
+
+# 왼 위 오 아래
+joystick = Joystick()
+
+my_stone = Character(joystick.width, joystick.height)
+
+# 이미지 파일 경로
+image_path = 'image/background.png'
+back = Image.open(image_path)
+
+# 초기 상태 설정
+scroll_speed = 50
+current_position = 0
+
+# 이미지의 높이 가져오기
+image_height = back.height  # 이미지의 높이를 가져옵니다.
+
+# 캐릭터 이미지의 크기 조정
+my_stone.appearance = my_stone.appearance.resize((joystick.width, joystick.height))
+result = 0
+while True:
+    command = None
+    if not joystick.button_L.value:  # left pressed
+        command = 'left_pressed'
+    elif not joystick.button_R.value:  # right pressed
+        command = 'right_pressed'
+    else:
+        command = None
+
+    my_stone.move(command)
+
+    # 이미지를 이동시킬 위치 계산
+    current_position += scroll_speed
+
+    # 이미지가 끝까지 스크롤되면 멈추기
+    if current_position > image_height - joystick.height:  # 이미지가 끝까지 스크롤되면 멈추기
+        break
+
+    # 이미지 조각내기 및 화면에 표시
+    cropped_image = back.crop((0, current_position, joystick.width, joystick.height + current_position))
+    display_image = cropped_image.copy()  # 배경 이미지 복사
+    my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
+
+    # 이미지 위에 캐릭터 그리기
+    display_image.paste(my_stone.appearance, tuple(my_stone.position))
 
     # 디스플레이에 이미지 표시
     joystick.disp.image(display_image)

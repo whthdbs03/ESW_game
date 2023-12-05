@@ -3,17 +3,18 @@ import time
 import random, os
 from colorsys import hsv_to_rgb
 
-from Character import Character  # Character 클래스를 불러와야 합니다.
+from Character import Character 
 from Joystick import Joystick
 
 # 왼 위 오 아래
 joystick = Joystick()
 
+# 게임 시작 출력--------------------------------------------------------------------------
 # 이미지 크기 설정
 image_width, image_height = 240, 240
 background_color = (0, 0, 0, 0)  # 배경색을 검정색으로 설정하거나 필요한 색상으로 변경
 
-    # 새 이미지 생성
+# 새 이미지 생성
 image = Image.new("RGBA", (image_width, image_height), background_color)
 draw = ImageDraw.Draw(image)
 
@@ -38,7 +39,8 @@ draw.text((text_x, text_y), text, fill=text_color, font=font)
 joystick.disp.image(image)
     
 time.sleep(2)
-    
+ # 게임 시작 출력 완----------------------------------------------------------------------   
+
 
 
 my_stone = Character(joystick.width, joystick.height)
@@ -65,6 +67,8 @@ while True:
         command = 'left_pressed'
     elif not joystick.button_R.value:  # right pressed
         command = 'right_pressed'
+    elif not joystick.button_A.value: # A pressed
+        command = 'A_pressed'
     else:
         command = None
 
@@ -98,7 +102,7 @@ while True:
 
 
  
-# 게임 실패 했다.
+# 게임 실패 했다. --------------------------------------------------------------------------
 if result == 0:
     time.sleep(2)
     
@@ -135,7 +139,7 @@ if result == 0:
     # 이미지를 화면에 표시
     joystick.disp.image(composed_image)
         
-# 게임 클리어 했다.
+# 게임 클리어 했다. -------------------------------------------------------------------------
 if result == 1:
     time.sleep(2) # 딜레이 주기
     # 이미지 크기 설정

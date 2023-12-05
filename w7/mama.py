@@ -144,7 +144,6 @@ while True:
     #     command = 'attack'
     else:
         command = None
-
     my_stone.move(command)
 
     # 이미지가 끝까지 스크롤되면 스크롤 중지
@@ -166,6 +165,13 @@ while True:
     if my_stone.position[1] + 50 > joystick.height:
         result = 1
         break    
+    
+    if my_stone.position[2] < 0:
+        my_stone.position[0] = joystick.width
+        my_stone.position[2] = joystick.width + my_stone.appearance.width
+    elif my_stone.position[0] >joystick.width:
+        my_stone.position[0] = - my_stone.appearance.width
+        my_stone.position[2] = 0
         
     # 이미지를 이동시킬 위치 계산
     current_position += scroll_speed
@@ -197,10 +203,7 @@ while True:
     # 이미지 위에 캐릭터 그리기
     display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position),mask)
 
-
-
-
-    # 추가된 코드 부분: 장애물 이미지
+    # 장애물 이미지
     obstacle_image = Image.open('image/obstacle.png')
 
     # 이미지 위에 장애물 그리기
@@ -208,10 +211,6 @@ while True:
         obstacle_x, obstacle_y = obstacle_pos  # 장애물 위치 추출
         obstacle_y -= current_position  # 스크롤에 맞게 y 좌표 조정
         display_image.paste(obstacle_image, (obstacle_x, obstacle_y))
-        
-    
-
-
 
     # 사각형들 그리기
     for i, position in enumerate(rectangle_positions):

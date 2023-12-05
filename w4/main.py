@@ -64,7 +64,7 @@ holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 가
 image_height = back.height  # 이미지의 높이를 가져옵니다.
 
 # 캐릭터 이미지의 크기 조정
-my_stone.appearances[my_stone.image_index] = my_stone.appearances[my_stone.image_index].resize((joystick.width, joystick.height))
+#my_stone.appearances[my_stone.image_index] = my_stone.appearances[my_stone.image_index].resize((joystick.width, joystick.height))
 mask = my_stone.appearances[my_stone.image_index].split()[3]
 
 result = 0
@@ -94,11 +94,9 @@ while True:
     display_image = cropped_image.copy()  # 배경 이미지 복사
     my_draw = ImageDraw.Draw(display_image)  # 이미지 위에 그리기 도구 생성
 
-    #초기 위치 맨왼쪽위...
-    box=(-100,-100)
     # 이미지 위에 캐릭터 그리기
     #display_image.paste(my_stone.appearance, tuple(my_stone.position))
-    display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position), mask)
+    display_image.paste(my_stone.appearances[my_stone.image_index], tuple(my_stone.position),mask)
 
     # 사각형들 그리기
     for i, position in enumerate(rectangle_positions):

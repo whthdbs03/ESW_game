@@ -6,13 +6,13 @@ from colorsys import hsv_to_rgb
 
 class Character:
     def __init__(self, width, height):
-        self.appearances = [Image.open('image/돌(1).png'),
-                           Image.open('image/돌(2).png'),
-                           Image.open('image/돌(3).png'),
-                           Image.open('image/돌(4).png')] #.crop((100,100,200,200))
+        self.appearances = [Image.open('image/stone(1).png'),
+                           Image.open('image/stone(2).png'),
+                           Image.open('image/stone(3).png'),
+                           Image.open('image/stone(4).png')]
         self.state = None
         #self.position = np.array([width/2 - 20, height/2 - 20, width/2 + 20, height/2 + 20])
-        self.position = [-100,-100] #초기위치
+        self.position = [0,0,32,29] #초기위치
         self.outline = "#00FF00"
         self.image_index = 0
 

@@ -99,7 +99,7 @@ holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 가
 # 장애물의 위치 설정
 for i, position in enumerate(rectangle_positions):
     obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
-    while holes[i] - 15 <= obstacle_x <= holes[i] + 45: # 홀 피해서
+    while holes[i]-15 <= obstacle_x <= holes[i] + 60: # 홀 피해서
         obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
     obstacle_y = position[1] - 40  # 흰 사각형 윗면보다 위에 장애물 배치
     obstacle_positions.append((obstacle_x, obstacle_y))
@@ -240,6 +240,7 @@ while True:
                 result = 0
                 break
             H(cnt)
+            print(cnt)
             my_stone.position[0] += 20
             my_stone.position[2] += 20
             

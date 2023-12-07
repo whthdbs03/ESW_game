@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import time
-import random, os
+import random, os, sys
 from colorsys import hsv_to_rgb
 
 from Character import Character 
@@ -40,7 +40,7 @@ joystick.disp.image(image)
     
 time.sleep(2)
  # 게임 시작 출력 완----------------------------------------------------------------------   
-# 하트개수 출력
+# 하트개수 출력 --------------------------------------------------------------------------
 def H(cnt):
     # 이미지 크기 설정
     image_width, image_height = 240, 240
@@ -95,6 +95,7 @@ holes = [random.randint(0, 180) for _ in range(len(rectangle_positions))]  # 240
 
 # 장애물의 위치 설정
 for i, position in enumerate(rectangle_positions):
+    if i == 0: continue
     obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
     while holes[i]-15 <= obstacle_x <= holes[i] + 60: # 홀 피해서
         obstacle_x = random.randint(position[0], position[0] + 180)  # 랜덤한 x좌표 설정
@@ -132,7 +133,7 @@ image_height = back.height  # 이미지의 높이를 가져옵니다.
 mask = my_stone.appearances[my_stone.image_index].split()[3]
     
 result = 0
-while True:
+while True: # 게임 시작---------------------------------------------------------------
     command = None
     if not joystick.button_L.value:  # left pressed
         command = 'left_pressed'
@@ -281,6 +282,11 @@ if result == 0:
 
     # 이미지를 화면에 표시
     joystick.disp.image(composed_image)
+    
+    time.sleep(2) # 딜레이 주기
+    while True:
+        if not joystick.button_A.value: # A pressed -> restart
+            os.execv(sys.executable, ['python'] + sys.argv)
         
 # 게임 클리어 했다. -------------------------------------------------------------------------
 if result == 1:

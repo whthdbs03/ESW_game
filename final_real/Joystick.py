@@ -21,6 +21,9 @@ class Joystick:
                     )
 
         # Input pins:
+        self.button_A = DigitalInOut(board.D5)
+        self.button_A.direction = Direction.INPUT
+        
         self.button_L = DigitalInOut(board.D27)
         self.button_L.direction = Direction.INPUT
 

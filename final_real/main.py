@@ -82,7 +82,9 @@ image_path = 'image/background.png'
 back = Image.open(image_path)
 
 # 초기 상태 설정
-scroll_speed = 1
+speed=[1,2,3] # 단계별 
+P = 0
+scroll_speed = speed[P]
 current_position = 0
 
 obstacle_positions = []  # 장애물의 위치를 저장할 리스트
@@ -106,9 +108,9 @@ def check_collision(obstacle_x, obstacle_y):
     # 돌의 모서리좌표
     stone_points = [
         (my_stone.position[0], my_stone.position[1]), 
-        (my_stone.position[0] + 28, my_stone.position[1]),  
-        (my_stone.position[0], my_stone.position[1] + 50), 
-        (my_stone.position[0] + 28, my_stone.position[1] + 50), 
+        (my_stone.position[0] + 32, my_stone.position[1]),  
+        (my_stone.position[0], my_stone.position[1] + 29), 
+        (my_stone.position[0] + 32, my_stone.position[1] + 29), 
     ]
 
     # 장애물의좌표
@@ -148,19 +150,19 @@ while True: # 게임 시작-----------------------------------------------------
         scroll_speed = 0
         
     # 돌이 아래로 떨어지지 않게 유지
-    elif my_stone.position[1] + 29 > joystick.height / 2:  # 돌이 디스플레이 중앙보다 아래에 위치하면
+    elif my_stone.position[1] + 29 > joystick.height / 2 + 40:  # 돌이 디스플레이 중앙보다 아래에 위치하면
         scroll_speed = 10  # 배경의 스크롤 속도를 10으로 변경
         my_stone.position[1] -= 10  # 돌을 
         my_stone.position[3] -= 10  # 위로 조금 이동
     else:
-        scroll_speed = 1  # 그 외에는 기본 스크롤 속도인 1로 유지
+        scroll_speed = speed[P]  # 그 외에는 기본 스크롤 속도로 유지
 
     # 돌이 위로 올라가면 사망
     if my_stone.position[1] < 0:
         result = 0
         break
     # 돌이 집 도착하면 성공
-    if my_stone.position[1] + 50 > joystick.height:
+    if my_stone.position[1] + 45 > joystick.height:
         result = 1
         break    
     # 돌이 벽 너머로 순간이동
@@ -173,6 +175,11 @@ while True: # 게임 시작-----------------------------------------------------
         
     # 배경이미지 스크롤
     current_position += scroll_speed
+    
+    if current_position > 1600:
+        P = 2
+    elif current_position > 800:
+        P = 1
 
     # 사각형들 돌면서 흰직사각형에 닿았는지
     hit_white_rectangle = False
@@ -289,7 +296,7 @@ if result == 0:
 
     # 텍스트를 이미지 중앙에 배치하기 위한 위치 계산 - "RESTART ->"
     text_x_restart = (image_width - text_width_restart) // 2
-    text_y_restart = text_y_gameover + text_height_gameover + 10  # "GAME OVER!!" 아래에 여백 추가
+    text_y_restart = text_y_gameover + text_height_gameover + 40  # "GAME OVER!!" 아래에 여백 추가
 
     # 텍스트를 이미지에 그리기 - "RESTART ->"
     draw.text((text_x_restart, text_y_restart), text_restart, fill=text_color_restart, font=font_restart)

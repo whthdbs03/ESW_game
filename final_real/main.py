@@ -261,27 +261,50 @@ if result == 0:
     draw = ImageDraw.Draw(image)
 
     # 텍스트 설정
-    text = "GAME OVER!!"
-    text_color = (255, 0, 0)  # 텍스트 색 빨강색
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)  # 폰트와 크기 설정
+    text_gameover = "GAME OVER!!"
+    text_color_gameover = (255, 0, 0)  # 텍스트 색 빨강색
+    font_gameover = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 24)  # 폰트와 크기 설정
 
     # 텍스트 크기 계산
-    text_bbox = draw.textbbox((0, 0), text, font=font)
-    text_width = text_bbox[2] - text_bbox[0]
-    text_height = text_bbox[3] - text_bbox[1]
+    text_bbox_gameover = draw.textbbox((0, 0), text_gameover, font=font_gameover)
+    text_width_gameover = text_bbox_gameover[2] - text_bbox_gameover[0]
+    text_height_gameover = text_bbox_gameover[3] - text_bbox_gameover[1]
 
     # 텍스트를 이미지 중앙에 배치하기 위한 위치 계산
-    text_x = (image_width - text_width) // 2
-    text_y = (image_height - text_height) // 2
+    text_x_gameover = (image_width - text_width_gameover) // 2
+    text_y_gameover = (image_height - text_height_gameover) // 2
 
     # 텍스트를 이미지에 그리기
-    draw.text((text_x, text_y), text, fill=text_color, font=font)
+    draw.text((text_x_gameover, text_y_gameover), text_gameover, fill=text_color_gameover, font=font_gameover)
+    
+    # 텍스트 설정 - "RESTART ->"
+    text_restart = "RESTART ->"
+    text_color_restart = (255, 255, 255)  # 텍스트 색 흰색
+    font_restart = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 18)  # 폰트와 크기 설정
+
+    # 텍스트 크기 계산 - "RESTART ->"
+    text_bbox_restart = draw.textbbox((0, 0), text_restart, font=font_restart)
+    text_width_restart = text_bbox_restart[2] - text_bbox_restart[0]
+    text_height_restart = text_bbox_restart[3] - text_bbox_restart[1]
+
+    # 텍스트를 이미지 중앙에 배치하기 위한 위치 계산 - "RESTART ->"
+    text_x_restart = (image_width - text_width_restart) // 2
+    text_y_restart = text_y_gameover + text_height_gameover + 10  # "GAME OVER!!" 아래에 여백 추가
+
+    # 텍스트를 이미지에 그리기 - "RESTART ->"
+    draw.text((text_x_restart, text_y_restart), text_restart, fill=text_color_restart, font=font_restart)
 
     # 현재 화면 이미지와 합성
     composed_image = Image.alpha_composite(cropped_image.convert("RGBA"), image)
 
     # 이미지를 화면에 표시
     joystick.disp.image(composed_image)
+
+    # # 현재 화면 이미지와 합성
+    # composed_image = Image.alpha_composite(cropped_image.convert("RGBA"), image)
+
+    # # 이미지를 화면에 표시
+    # joystick.disp.image(composed_image)
     
     time.sleep(2) # 딜레이 주기
     while True:
